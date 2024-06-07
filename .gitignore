@@ -1,0 +1,30 @@
+.env
+/venv
+ignore.txt
+__pycache__/
+.vscode/
+Thumbs.db
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+*.log
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt

@@ -1,0 +1,41 @@
+parameters:
+  - in: query
+    name: name
+    schema:
+      type: string
+    description: Name of the state to search for (partial or full match)
+  - in: query
+    name: id
+    schema:
+      type: integer
+    description: ID of the state to search for
+responses:
+  200:
+    description: States successfully fetched
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          country_id:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+  500:
+    description: Internal Server Error
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string

@@ -1,0 +1,60 @@
+
+parameters:
+  - in: query
+    name: name
+    schema:
+      type: string
+    required: true
+    description: The name of the customer to fetch.
+responses:
+  200:
+    description: Customer successfully fetched
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              phone:
+                type: string
+              email:
+                type: string
+              street:
+                type: string
+              street2:
+                type: string
+              city:
+                type: string
+              zip:
+                type: string
+              state_id:
+                type: string
+              country_id:
+                type: string
+  400:
+    description: Bad Request
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+            message:
+              type: string
+  500:
+    description: Internal Server Error
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+            message:
+              type: string

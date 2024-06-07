@@ -1,0 +1,52 @@
+parameters:
+  - in: body
+    name: body
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        zip:
+          type: string
+      required:
+        - name
+responses:
+  200:
+    description: Customer successfully created
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+        customer_id:
+          type: integer
+  400:
+    description: Bad Request
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+  500:
+    description: Internal Server Error
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
