@@ -289,3 +289,83 @@ def bulk_create_customers():
         logging.error(f"Error bulk creating customers: {e}\n")
         # If an error occurred, return the error message in JSON format with a 500 Internal Server Error status code
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@customer_bp.route("/bulk_update", methods=["PATCH"])
+@swag_from("../swagger/bulk_update_customers.yml")
+def bulk_update_customers():
+    """
+    Bulk update customers.
+
+    This function takes a JSON array from the request,
+    where each object in the list contains a customer's ID and the data (values dict/obj) to update.
+
+    Returns:
+        A tuple containing a JSON object and a status code.
+    """
+    # Get the JSON data from the request
+    data = request.json
+    logging.info(f"Request to bulk update customers received: {data} \n")
+
+    # Validate the input - check that the data is a list of customer data
+    if not isinstance(data, list):
+        logging.error(f"Input must be a list of customer data \n")
+        return (
+            jsonify(
+                {"status": "error", "message": "Input must be a list of customer data."}
+            ),
+            400,
+        )
+
+    # Validate the input - check that each customer object has an ID and values
+    for customer in data:
+        #  if no customer Id or values are provided, dont proceed and return an error
+        if not customer.get("id") or not customer.get("values"):
+            logging.error(f"Each customer must include 'id' and 'values' \n")
+            return (
+                jsonify(
+                    {
+                        "status": "error",
+                        "message": "Each customer must include 'id' and 'at least 1 key: value'.",
+                    }
+                ),
+                400,
+            )
+        # if the values are not a dictionary, return an error
+        if not isinstance(customer["values"], dict):
+            logging.error(f"Values must be a dictionary \n")
+            return (
+                jsonify(
+                    {
+                        "status": "error",
+                        "message": "Values must be a dictionary.",
+                    }
+                ),
+                400,
+            )
+
+    try:
+        for customer in data:
+            # Check if the customer exists
+            customer_exists = client.execute(
+                "res.partner", "search", [("id", "=", customer["id"])]
+            )
+            if not customer_exists:
+                logging.error(f"Customer with ID {customer['id']} not found \n")
+                return (
+                    jsonify({"status": "error", "message": "Customer not found."}),
+                    404,
+                )
+
+            # Call the helper function to handle the update
+            update_customer(customer["id"], customer["values"])
+
+        # Return a success message in JSON format with a 200 OK status code
+        logging.info(f"Bulk updated customers successfully \n")
+        return jsonify({"status": "successfully updated"}), 200
+    except ValueError as ve:
+        logging.error(f"Validation error: {ve}\n")
+        return jsonify({"status": "error", "message": str(ve)}), 400
+    except Exception as e:
+        logging.error(f"Error bulk updating customers: {e}\n")
+        return jsonify({"status": "error", "message": str(e)}), 500

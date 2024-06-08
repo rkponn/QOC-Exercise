@@ -14,8 +14,12 @@ password = os.getenv("ODOO_PASSWORD")
 
 
 class OdooClient:
-
     def __init__(self):
+        """
+        Initializes the OdooClient with necessary configurations.
+        Sets up an SSL context that ignores certificate verification errors (not recommended for production).
+        Authenticates the user and sets up a common server proxy.
+        """
         # Create an SSL context that ignores certificate verification errors - DO NOT USE IN PRODUCTION, keep it simple for this demo
         self.context = ssl._create_unverified_context()
 
@@ -28,7 +32,11 @@ class OdooClient:
         self.uid = self.common.authenticate(db, username, password, {})
 
     def authenticate(self):
-        # Authenticate the user and return the user ID
+        """
+        Authenticate the user and return the user ID.
+        Returns:
+            int: The user ID if authentication is successful.
+        """
         return self.uid
 
     def execute(self, model, method, *args):
